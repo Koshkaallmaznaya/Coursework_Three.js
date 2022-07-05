@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset=UTF-8 />
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+  </head>
+  <body>
+    <div class="text-box">
+      <div class="heading"># Follow Us</div>
+      <div class="button-wrapper">
+          <div class="button">Learn More</div>
+          <div class="button">Contacts</div>
+      </div>
+    </div>
+
+    <script src="three.min.js"></script>
+    <script>
+    let scene, camera, renderer, stars1, stars2, stars3, starGeo3, starGeo2, starGeo1; //объявили переменные
+
+    function init() { //основная функция
+
+      scene = new THREE.Scene(); //создаем сцену
+
+      camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000); //создаем камеру
+      camera.position.z = 1; //позиция камеры
+      camera.rotation.x = Math.PI/2; //поворот камеры
+
+      renderer = new THREE.WebGLRenderer(); //создаем рендер
+      renderer.setSize(window.innerWidth, window.innerHeight); //масштабируем по окну
+      
+      let loader = new THREE.TextureLoader(); //объявили переменную фона
+        const bgTexture = loader.load('2.png'); //показали, где лежит фон
+        scene.background = bgTexture; //добавили фон
+        
+      document.body.appendChild(renderer.domElement); //добавляем еще один узел HTML с определенным элементом рендера
+
+      starGeo1 = new THREE.Geometry(); //создаем геометрию (один большой объект)
+      starGeo2 = new THREE.Geometry();
+      starGeo3 = new THREE.Geometry();
+      
+      for (let i = 0; i < 2000; i++) { //для каждой вершины:
+        star1 = new THREE.Vector3( //создаем массив
+          Math.random() * 600 - 300, //задаем рандомное положение
+          Math.random() * 600 - 300,
+          Math.random() * 600 - 300
+        );
+        star1.velocity = 0; //задаем скорость элемента
+        star1.acceleration = 0.007; //задаем ускорение элемента
+        starGeo1.vertices.push(star1); //добавляем массив с вершинами в объект
+      }
+      
+      for (let i = 0; i < 2000; i++) { //для каждой вершины:
+        star2 = new THREE.Vector3( //создаем массив
+          Math.random() * 600 - 300, //задаем рандомное положение
+          Math.random() * 600 - 300,
+          Math.random() * 600 - 300
+        );
+        star2.velocity = 0; //задаем скорость элемента
+        star2.acceleration = 0.005; //задаем ускорение элемента
+        starGeo2.vertices.push(star2); //добавляем массив с вершинами в объект
+      }
+      
+      for (let i = 0; i < 2000; i++) { //для каждой вершины:
+        star3 = new THREE.Vector3( //создаем массив
+          Math.random() * 600 - 300, //задаем рандомное положение
+          Math.random() * 600 - 300,
+          Math.random() * 600 - 300
+        );
+        star3.velocity = 0; //задаем скорость элемента
+        star3.acceleration = 0.004; //задаем ускорение элемента
+        starGeo3.vertices.push(star3); //добавляем массив с вершинами в объект
+      }
+
+      let sprite = new THREE.TextureLoader().load('1.png'); //создаем текстуру
+      let starMaterial = new THREE.PointsMaterial({ //создаем материал
+        size: 3, //задаем размер
+        map: sprite, //сопоставляем с загруженным изображением
+        transparent: true //для прозрачности краев объекта
+      });
+
+      stars1 = new THREE.Points(starGeo1,starMaterial);
+      stars2 = new THREE.Points(starGeo2,starMaterial);
+      stars3 = new THREE.Points(starGeo3,starMaterial);//сопоставляем материал и точки в пространстве
+      scene.add(stars1);
+      scene.add(stars2);
+      scene.add(stars3);//добавляем их в сцену
+    
+      window.addEventListener("resize", onWindowResize, false); //для правильной работы при сжатии окна
+
+      animate(); //запуск функции анимации
+    }
+    
+    function onWindowResize() { //функция подгона размера под окно
+        camera.aspect = window.innerWidth / window.innerHeight; //установка соотношения сторон
+        camera.updateProjectionMatrix(); //обновляет камеру, применяя новые изменения
+        renderer.setSize(window.innerWidth, window.innerHeight); //масштабируем по окну
+    }
+
+    function animate() { //функция анимации (каждый кадр)
+      starGeo1.vertices.forEach(p => { //просматриваем каждую вершину
+        p.velocity += p.acceleration //обновляем скорость
+        p.y -= p.velocity; //перемещаем элементы по оси у с заданной ранее скоростью
+        if (p.y < -100) { //проверка дошла ли снежинка до экрана
+          p.y = 300; //устанавливаем новое местоположение
+          p.velocity = 0; //устанавливаем новую скорость
+        }
+      });
+      
+      starGeo2.vertices.forEach(p => { //просматриваем каждую вершину
+        p.velocity += p.acceleration //обновляем скорость
+        p.y -= p.velocity; //перемещаем элементы по оси у с заданной ранее скоростью
+        if (p.y < -100) { //проверка дошла ли снежинка до экрана
+          p.y = 300; //устанавливаем новое местоположение
+          p.velocity = 0; //устанавливаем новую скорость
+        }
+      });
+      
+      starGeo3.vertices.forEach(p => { //просматриваем каждую вершину
+        p.velocity += p.acceleration //обновляем скорость
+        p.y -= p.velocity; //перемещаем элементы по оси у с заданной ранее скоростью
+        if (p.y < -100) { //проверка дошла ли снежинка до экрана
+          p.y = 300; //устанавливаем новое местоположение
+          p.velocity = 0; //устанавливаем новую скорость
+        }
+      });
+      
+      starGeo1.verticesNeedUpdate = true;
+      starGeo2.verticesNeedUpdate = true;
+      starGeo3.verticesNeedUpdate = true; //обновляем вершины 
+      stars1.rotation.y += 0.003;
+      stars2.rotation.y -= 0.0045;
+      stars3.rotation.y += 0.003;//поворот всех вершин
+      
+      renderer.render(scene, camera); //рекурсивно вызываем рендер
+      requestAnimationFrame(animate); //указывает браузеру, что вы хотите произвести анимацию, и просит его запланировать перерисовку на следующем кадре анимации. Параметр - функция, которую вызовут перед перерисовкой
+    }
+    
+    init(); //запуск основной функции
+    
+    </script>
+  </body>
+</html>
