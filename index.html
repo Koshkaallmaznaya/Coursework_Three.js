@@ -127,9 +127,9 @@
       starGeo1.verticesNeedUpdate = true;
       starGeo2.verticesNeedUpdate = true;
       starGeo3.verticesNeedUpdate = true; //обновляем вершины 
-      stars1.rotation.y += 0.003;
+      stars1.rotation.y += 0.0035;
       stars2.rotation.y -= 0.0045;
-      stars3.rotation.y += 0.003;//поворот всех вершин
+      stars3.rotation.y += 0.0025;//поворот всех вершин
       
       renderer.render(scene, camera); //рекурсивно вызываем рендер
       requestAnimationFrame(animate); //указывает браузеру, что вы хотите произвести анимацию, и просит его запланировать перерисовку на следующем кадре анимации. Параметр - функция, которую вызовут перед перерисовкой
